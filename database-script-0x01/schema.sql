@@ -43,24 +43,24 @@ CREATE TABLE property(
 );
 
 --  BookingStatus Table
-CREATE TABLE BookingStatus (
+CREATE TABLE bookingStatus (
     booking_status_id SERIAL PRIMARY KEY,
     status_name VARCHAR(50) UNIQUE NOT NULL
 );
 
 --  Booking Table
-CREATE TABLE Booking (
+CREATE TABLE booking (
     booking_id UUID PRIMARY KEY,
     property_id UUID NOT NULL REFERENCES Property(property_id),
     user_id UUID NOT NULL REFERENCES "User"(user_id),
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    booking_status_id INT NOT NULL REFERENCES BookingStatus(status_id),
+    booking_status_id INT NOT NULL REFERENCES bookingStatus(status_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 --  PaymentMethod Table
-    CREATE TABLE PaymentMethod (
+    CREATE TABLE paymentmethod (
     method_id SERIAL PRIMARY KEY,
     method_name VARCHAR(50) UNIQUE NOT NULL
 );
@@ -71,11 +71,11 @@ CREATE TABLE Payment (
     booking_id UUID NOT NULL REFERENCES Booking(booking_id),
     amount DECIMAL(10,2) NOT NULL,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    method_id INT NOT NULL REFERENCES PaymentMethod(method_id)
+    method_id INT NOT NULL REFERENCES paymentmethod(method_id)
 );
 
 -- Review Table
-CREATE TABLE Review (
+CREATE TABLE review (
     review_id UUID PRIMARY KEY,
     property_id UUID NOT NULL REFERENCES Property(property_id),
     user_id UUID NOT NULL REFERENCES "User"(user_id),
@@ -86,7 +86,7 @@ CREATE TABLE Review (
 
 
 --  Message Table
-CREATE TABLE Message (
+CREATE TABLE message (
     message_id UUID PRIMARY KEY,
     sender_id UUID NOT NULL REFERENCES "User"(user_id),
     recipient_id UUID NOT NULL REFERENCES "User"(user_id),
