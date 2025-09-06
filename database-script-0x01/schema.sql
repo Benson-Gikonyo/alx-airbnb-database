@@ -1,14 +1,14 @@
 -- Role table
 
 
-CREATE TABLE role (
+CREATE TABLE Role (
     role_id SERIAL PRIMARY KEY,
     role_name VARCHAR(50) UNIQUE NOT NULL
 );
 
 -- User table
 
-CREATE TABLE user(
+CREATE TABLE User(
     user_id UUID PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE user(
 );
 
 -- location table
-CREATE TABLE location(
+CREATE TABLE Location(
     location_id SERIAL PRIMARY KEY,
     address VARCHAR(255) NOT NULL,
     city VARCHAR(100) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE location(
 
 --property table
 
-CREATE TABLE property(
+CREATE TABLE Property(
     property_id UUID PRIMARY KEY,
     host_id UUID NOT NULL REFERENCES user(user_id),
     name VARCHAR(150) NOT NULL,
@@ -43,24 +43,24 @@ CREATE TABLE property(
 );
 
 --  BookingStatus Table
-CREATE TABLE bookingStatus (
+CREATE TABLE BookingStatus (
     booking_status_id SERIAL PRIMARY KEY,
     status_name VARCHAR(50) UNIQUE NOT NULL
 );
 
 --  Booking Table
-CREATE TABLE booking (
+CREATE TABLE Booking (
     booking_id UUID PRIMARY KEY,
     property_id UUID NOT NULL REFERENCES Property(property_id),
     user_id UUID NOT NULL REFERENCES "User"(user_id),
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    booking_status_id INT NOT NULL REFERENCES bookingStatus(status_id),
+    booking_status_id INT NOT NULL REFERENCES BookingStatus(status_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 --  PaymentMethod Table
-    CREATE TABLE paymentmethod (
+    CREATE TABLE PaymentMethod (
     method_id SERIAL PRIMARY KEY,
     method_name VARCHAR(50) UNIQUE NOT NULL
 );
@@ -71,14 +71,14 @@ CREATE TABLE Payment (
     booking_id UUID NOT NULL REFERENCES Booking(booking_id),
     amount DECIMAL(10,2) NOT NULL,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    method_id INT NOT NULL REFERENCES paymentmethod(method_id)
+    method_id INT NOT NULL REFERENCES PaymentMethod(method_id)
 );
 
 -- Review Table
-CREATE TABLE review (
+CREATE TABLE Review (
     review_id UUID PRIMARY KEY,
     property_id UUID NOT NULL REFERENCES Property(property_id),
-    user_id UUID NOT NULL REFERENCES "User"(user_id),
+    user_id UUID NOT NULL REFERENCES User(user_id),
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -86,17 +86,17 @@ CREATE TABLE review (
 
 
 --  Message Table
-CREATE TABLE message (
+CREATE TABLE Message (
     message_id UUID PRIMARY KEY,
-    sender_id UUID NOT NULL REFERENCES "User"(user_id),
-    recipient_id UUID NOT NULL REFERENCES "User"(user_id),
+    sender_id UUID NOT NULL REFERENCES User(user_id),
+    recipient_id UUID NOT NULL REFERENCES User(user_id),
     message_body TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
 -- Indexes for performance
-CREATE INDEX idx_user_email ON user(email);
+CREATE INDEX idx_user_email ON User(email);
 CREATE INDEX idx_property_host ON Property(host_id);
 CREATE INDEX idx_property_location ON Property(location_id);
 CREATE INDEX idx_booking_property ON Booking(property_id);
