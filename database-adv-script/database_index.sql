@@ -19,3 +19,15 @@ CREATE INDEX idx_property_host ON Property(host_id);
 CREATE INDEX idx_property_location ON Property(location_id);
 CREATE INDEX idx_property_price ON Property(price_per_night);
 CREATE INDEX idx_property_created_at ON Property(created_at); --newest listings
+
+
+--Before indexing
+
+EXPLAIN ANALYZE
+SELECT b.booking_id, b.start_date, b.end_date, u.first_name, p.name
+FROM Booking b
+JOIN User u ON b.user_id = u.user_id
+JOIN Property p ON b.property_id = p.property_id
+WHERE b.start_date BETWEEN '2024-06-01' AND '2024-06-30'
+ORDER BY b.start_date;
+
