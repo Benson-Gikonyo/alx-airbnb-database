@@ -12,11 +12,13 @@ ORDER BY total_bookings DESC;
 --A window function (ROW_NUMBER, RANK) to rank properties based on the total number of bookings they have
 -- received.
 
-SELECT Property.property_id,
-       Property.name AS property_name,
-       COUNT(Booking.booking_id) AS total_bookings,
-       RANK() OVER (ORDER BY COUNT(Booking.booking_id) DESC) AS booking_rank
-FROM Property 
-LEFT JOIN Booking  ON Property.property_id = Booking.property_id
-GROUP BY Property.property_id, Property.name
-ORDER BY booking_rank;
+SELECT 
+    p.property_id,
+    p.name AS property_name,
+    COUNT(b.booking_id) AS total_bookings,
+    RANK() OVER (ORDER BY COUNT(b.booking_id) DESC) AS booking_rank,
+    ROW_NUMBER() OVER (ORDER BY COUNT(b.booking_id) DESC) AS booking_rownum
+FROM Property p
+LEFT JOIN Booking b ON p.property_id = b.property_id
+GROUP BY p.property_id, p.name
+ORDER BY total_bookings DESC;
